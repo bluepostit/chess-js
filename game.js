@@ -251,8 +251,7 @@ var Game = (() => {
 
     /**
       * This gets called after determining that
-      * it's your turn, your piece, and this move
-      * won't leave you in check.
+      * it's your turn, and the piece belongs to you.
       */
     function isLegalMove(start, end) {
         let startPiece = board.getPieceOnSquare(start);
@@ -303,11 +302,11 @@ var Game = (() => {
             if (!doesPieceBelongToCurrentPlayer(piece)) {
                 throw "Piece at square " + start + " (" + piece + ") is not yours";
             }
-            if (endsInOwnCheck(start, end)) {
-                throw "That leaves your king in check";
-            }
             if (!isLegalMove(start, end)) {
                 throw "That move is not legal";
+            }
+            if (endsInOwnCheck(start, end)) {
+                throw "That leaves your king in check";
             }
 
             return true;
