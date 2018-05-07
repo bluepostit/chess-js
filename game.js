@@ -1,6 +1,5 @@
 class Board {
     constructor() {
-        this.activePlayer = 'w';
         this.squares = [
             ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
             ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
@@ -59,8 +58,13 @@ class Board {
         return piece;
     }
 
-    getActivePlayer() {
-        return this.activePlayer;
+    setPieceOnSquare(square, piece) {
+        let coords = this.getCoordinatesForSquare(square);
+        if (!!coords) {
+            let x = coords[1];
+            let y = coords[0];
+            this.squares[y][x] = piece;
+        }
     }
 
     getPlayerForPiece(square) {
@@ -72,20 +76,38 @@ class Board {
         //console.log('player for ' + square + ' is: ' + player);
         return player;
     }
+
+    move(start, end) {
+        let piece = this.getPieceOnSquare(start);
+        if (!piece || piece === null) {
+            throw "No piece on square " + start;
+        }
+        this.setPieceOnSquare(start, '');
+        this.setPieceOnSquare(end, piece);
+    }
+
+    debug() {
+        console.log(this.squares);
+    }
 }
 
 var Game = (() => {
     let b = new Board();
+    let activePlayer = 'w';
 
     function isEmptySquare(square) {
         return (b.getPlayerForPiece(square) == '');
     }
 
-    function doesPieceBelongToCurrentPlayer(square) {
+    function doesPieceBelongToCurrentPlayer(piece) {
         // Is it your piece?
-        let activePlayer = b.getActivePlayer();
-        let piecePlayer = b.getPlayerForPiece(square);
+        let piecePlayer = piece.substring(0, 1);
         return (activePlayer == piecePlayer);
+    }
+
+    function debug() {
+        b.debug();
+        console.log('Next move: ' + activePlayer);
     }
 
     return class {
@@ -93,18 +115,25 @@ var Game = (() => {
             this.board = b;
         }
 
-        move(start, finish) {
-            if (!this.canMove(start, finish)) {
+        move(start, end) {
+            if (!start || !end) {
+                throw "Invalid square";
+            }
+            if (!this.canMove(start, end)) {
                 throw 'Invalid move';
             }
+            this.board.move(start, end);
+            activePlayer = (activePlayer == 'w' ? 'b' : 'w');
+            debug();
         }
 
         canMove(start, end) {
             if (isEmptySquare(start)) {
                 throw "Square " + start + " is empty";
             }
-            if (!doesPieceBelongToCurrentPlayer(start)) {
-                throw "Square " + start + " is not your piece";
+            let piece = this.board.getPieceOnSquare(start);
+            if (!doesPieceBelongToCurrentPlayer(piece)) {
+                throw "Piece at square " + start + " (" + piece + ") is not yours";
             }
 
 
