@@ -10,6 +10,8 @@ class Board {
             ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
             ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
         ];
+        this.testingMoveMode = false;
+        this.testingMove = null;
     }
     getCoordinatesForSquare(square) {
         let file = square.substring(0, 1);
@@ -78,12 +80,50 @@ class Board {
     }
 
     move(start, end) {
-        let piece = this.getPieceOnSquare(start);
-        if (!piece || piece === null) {
+        let startPiece = this.getPieceOnSquare(start);
+        let endPiece = this.getPieceOnSquare(end);
+        if (!startPiece || startPiece === null) {
             throw "No piece on square " + start;
         }
+        // Store this move for easy undo
+        let currentMove = {
+            start : {
+                square: start,
+                piece: startPiece
+            },
+            end : {
+                square: end,
+                piece: endPiece
+            }
+        };
+        if (this.testingMoveMode) {
+            this.testingMove = currentMove;
+        } else {
+            this.lastMove = currentMove;
+        }
+
         this.setPieceOnSquare(start, '');
-        this.setPieceOnSquare(end, piece);
+        this.setPieceOnSquare(end, startPiece);
+    }
+
+    undoLastMove() {
+        let lastMove = (this.testingMoveMode ? this.testingMove : this.lastMove);
+        let start = lastMove.start;
+        let end = lastMove.end;
+        this.setPieceOnSquare(start.square, start.piece);
+        this.setPieceOnSquare(end.square, end.piece);
+        if (this.testingMoveMode) {
+            this.testingMove = null;
+        } else {
+            this.lastMove = null;
+        }
+    }
+
+    setTestingMoveMode(testing) {
+        this.testingMoveMode = !!testing;
+        console.log('===================== TEST '
+            + (!!testing ? 'START' : 'END')
+            + ' =====================');
     }
 
     debug() {
@@ -104,6 +144,28 @@ var Game = (() => {
         // Is it your piece?
         let piecePlayer = piece.substring(0, 1);
         return (activePlayer == piecePlayer);
+    }
+
+    function isInCheck(player) {
+        let inCheck = (player == 'b');
+        console.log('is player ' + player + ' in check? ' + inCheck);
+        return inCheck;
+    }
+
+    function endsInOwnCheck(start, end) {
+        board.setTestingMoveMode(true);
+        board.move(start, end);
+        console.log('Checking for check...');
+        board.debug();
+        isOwnCheck = false;
+        if (isInCheck(activePlayer)) {
+            isOwnCheck = true;
+        }
+        console.log('Undoing last move');
+        board.undoLastMove();
+        board.setTestingMoveMode(false);
+        debug();
+        return isOwnCheck;
     }
 
     function debug() {
@@ -135,6 +197,9 @@ var Game = (() => {
             if (!doesPieceBelongToCurrentPlayer(piece)) {
                 throw "Piece at square " + start + " (" + piece + ") is not yours";
             }
+            if (endsInOwnCheck(start, end)) {
+                throw "That leaves your king in check";
+            }
 
 
             return true;
@@ -143,4 +208,5 @@ var Game = (() => {
 })();
 
 g = new Game();
-//g.move('e2', 'e4');
+// g.move('e2', 'e4');
+// g.move('e7', 'e5');
