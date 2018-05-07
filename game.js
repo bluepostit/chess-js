@@ -93,6 +93,7 @@ class Board {
 
 var Game = (() => {
     let b = new Board();
+    let history = [];
     let activePlayer = 'w';
 
     function isEmptySquare(square) {
@@ -107,6 +108,8 @@ var Game = (() => {
 
     function debug() {
         b.debug();
+        console.log('History: ');
+        console.log(history);
         console.log('Next move: ' + activePlayer);
     }
 
@@ -123,6 +126,7 @@ var Game = (() => {
                 throw 'Invalid move';
             }
             this.board.move(start, end);
+            history.push([start, end]);
             activePlayer = (activePlayer == 'w' ? 'b' : 'w');
             debug();
         }
