@@ -176,9 +176,9 @@ var Game = (() => {
     }
 
     function endsInOwnCheck(start, end) {
+        console.log('Checking for check...');
         board.setTestingMoveMode(true);
         board.move(start, end);
-        console.log('Checking for check...');
         board.debug();
         isOwnCheck = false;
         if (isInCheck(activePlayer)) {
@@ -187,7 +187,7 @@ var Game = (() => {
         console.log('Undoing last move');
         board.undoLastMove();
         board.setTestingMoveMode(false);
-        debug();
+        console.log('Would put you in check? ' + isOwnCheck);
         return isOwnCheck;
     }
 
@@ -265,6 +265,7 @@ var Game = (() => {
                 break;
         }
 
+        console.log('Is legal move? ' + isLegal);
         return isLegal;
     }
 
@@ -272,7 +273,7 @@ var Game = (() => {
         board.debug();
         console.log('History: ');
         console.log(history);
-        console.log('Next move: ' + activePlayer);
+        console.log('Next to move: ' + activePlayer);
     }
 
     return class {
@@ -316,4 +317,4 @@ var Game = (() => {
 
 g = new Game();
 // g.move('e2', 'e4');
-// g.move('e7', 'e5');
+// g.move('e7', 'd6');
