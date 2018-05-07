@@ -43,7 +43,7 @@ class Board {
                 x = 7;
                 break;
         }
-        console.log(this.squares[y][x]);
+        //console.log(this.squares[y][x]);
         return [y, x];
     }
 
@@ -92,12 +92,12 @@ class Board {
 }
 
 var Game = (() => {
-    let b = new Board();
+    let board = new Board();
     let history = [];
     let activePlayer = 'w';
 
     function isEmptySquare(square) {
-        return (b.getPlayerForPiece(square) == '');
+        return (board.getPieceOnSquare(square) == '');
     }
 
     function doesPieceBelongToCurrentPlayer(piece) {
@@ -107,17 +107,13 @@ var Game = (() => {
     }
 
     function debug() {
-        b.debug();
+        board.debug();
         console.log('History: ');
         console.log(history);
         console.log('Next move: ' + activePlayer);
     }
 
     return class {
-        constructor() {
-            this.board = b;
-        }
-
         move(start, end) {
             if (!start || !end) {
                 throw "Invalid square";
@@ -125,7 +121,7 @@ var Game = (() => {
             if (!this.canMove(start, end)) {
                 throw 'Invalid move';
             }
-            this.board.move(start, end);
+            board.move(start, end);
             history.push([start, end]);
             activePlayer = (activePlayer == 'w' ? 'b' : 'w');
             debug();
@@ -135,7 +131,7 @@ var Game = (() => {
             if (isEmptySquare(start)) {
                 throw "Square " + start + " is empty";
             }
-            let piece = this.board.getPieceOnSquare(start);
+            let piece = board.getPieceOnSquare(start);
             if (!doesPieceBelongToCurrentPlayer(piece)) {
                 throw "Piece at square " + start + " (" + piece + ") is not yours";
             }
@@ -147,3 +143,4 @@ var Game = (() => {
 })();
 
 g = new Game();
+//g.move('e2', 'e4');
