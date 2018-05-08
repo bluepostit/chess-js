@@ -152,6 +152,22 @@ var Game = (() => {
         return isOwnCheck;
     }
 
+    function getMoveDiff(start, end) {
+        let startCoords = board.getCoordinatesForSquare(start);
+        let endCoords = board.getCoordinatesForSquare(end);
+        let startFile = startCoords[1];
+        let endFile = endCoords[1];
+
+        // Must be the specific Knight move
+        let rankDiff = Math.abs(startCoords[0] - endCoords[0]);
+        let fileDiff = Math.abs(startCoords[1] - endCoords[1]);
+
+        return {
+            file: fileDiff,
+            rank: rankDiff
+        };
+    }
+
     function isLegalPawnMove(start, end, player) {
         let startFile = start.substring(0, 1);
         let startRank = parseInt(start.substring(1, 2));
@@ -211,16 +227,10 @@ var Game = (() => {
     }
 
     function isLegalKnightMove(start, end, player) {
-        let startRank = parseInt(start.substring(1, 2));
-        let endRank = parseInt(end.substring(1, 2));
-        let startCoords = board.getCoordinatesForSquare(start);
-        let endCoords = board.getCoordinatesForSquare(end);
-        let startFile = startCoords[1];
-        let endFile = endCoords[1];
+        let moveDiff = getMoveDiff(start, end);
+        let fileDiff = moveDiff.file;
+        let rankDiff = moveDiff.rank;
 
-        // Must be the specific Knight move
-        let rankDiff = Math.abs(startRank - endRank);
-        let fileDiff = Math.abs(startFile - endFile);
         console.log('rank diff: ' + rankDiff + ', file diff: ' + fileDiff);
         if (!((rankDiff == 2) && (fileDiff == 1)) || ((rankDiff == 1) && (fileDiff == 2))) {
             return false;
