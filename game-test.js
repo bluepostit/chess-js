@@ -7,7 +7,7 @@ let moves = [
     ['e4', 'd5'],
     ['b8', 'c6'],
     ['d5', 'c6'],
-    ['a7', 'c6'],
+    ['b7', 'c6'],
 ];
 for (var i = 0; i < moves.length; i++) {
     let start = moves[i][0];
