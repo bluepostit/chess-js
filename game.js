@@ -72,7 +72,6 @@ class Board {
         if (!!piece && piece.length >= 2) {
             player = piece.substring(0, 1);
         }
-        //console.log('player for ' + square + ' is: ' + player);
         return player;
     }
 
@@ -127,24 +126,22 @@ var Game = (() => {
     }
 
     function doesPieceBelongToCurrentPlayer(piece) {
-        // Is it your piece?
         let piecePlayer = piece.substring(0, 1);
         return (activePlayer == piecePlayer);
     }
 
     /** TO DO: implement a real test for check.
-      * Currently the black player will always be in check.
       */
     function isInCheck(player) {
-        let inCheck = (player == 'b');
-        console.log('is player ' + player + ' in check? ' + inCheck);
+        // let inCheck = (player == 'b');
+        let inCheck = false;
+        console.log('Is player ' + player + ' in check? ' + inCheck);
         return inCheck;
     }
 
     function endsInOwnCheck(start, end) {
         setTestingMoveMode(true);
         doMove(start, end);
-        //board.debug();
         isOwnCheck = false;
         if (isInCheck(activePlayer)) {
             isOwnCheck = true;
@@ -333,6 +330,4 @@ var Game = (() => {
     };
 })();
 
-g = new Game();
-// g.move('e2', 'e4');
-// g.move('e7', 'd6');
+exports.Game = Game;
