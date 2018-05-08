@@ -158,7 +158,6 @@ var Game = (() => {
         let startFile = startCoords[1];
         let endFile = endCoords[1];
 
-        // Must be the specific Knight move
         let rankDiff = Math.abs(startCoords[0] - endCoords[0]);
         let fileDiff = Math.abs(startCoords[1] - endCoords[1]);
 
@@ -232,8 +231,8 @@ var Game = (() => {
         let fileDiff = moveDiff.file;
         let rankDiff = moveDiff.rank;
 
-        console.log('rank diff: ' + rankDiff + ', file diff: ' + fileDiff);
-        if (!((rankDiff == 2) && (fileDiff == 1)) || ((rankDiff == 1) && (fileDiff == 2))) {
+        // Must be the specific knight move
+        if (!((rankDiff == 2) && (fileDiff == 1)) && !((rankDiff == 1) && (fileDiff == 2))) {
             return false;
         }
 
