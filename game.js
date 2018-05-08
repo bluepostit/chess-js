@@ -173,6 +173,7 @@ var Game = (() => {
         let startRank = parseInt(start.substring(1, 2));
         let endFile = end.substring(0, 1);
         let endRank = parseInt(end.substring(1, 2));
+        let moveDiff = getMoveDiff(start, end);
 
         let isWhite = (player == 'w');
         let hasMovedYet = (isWhite ? startRank != 2 : startRank != 7);
@@ -185,12 +186,12 @@ var Game = (() => {
 
         if (startFile == endFile) {
             // Can't move more than one square if it's moved before
-            if (hasMovedYet && (Math.abs(endRank - startRank) > 1)) {
+            if (hasMovedYet && (moveDiff.rank > 1)) {
                 console.log('cannot move more than 1 square');
                 return false;
             }
             // Can't move more than 2 squares
-            if (Math.abs(endRank - startRank) > 2) {
+            if (moveDiff.rank > 2) {
                 console.log('cannot move more than 2 squares');
                 return false;
             }
@@ -200,7 +201,7 @@ var Game = (() => {
                 return false;
             }
             // Can't jump over another piece
-            if (Math.abs(endRank - startRank) == 2) {
+            if (moveDiff.rank == 2) {
                 let intermediateRank = (isWhite ? startRank + 1 : startRank - 1);
                 let intermediateSquare = startFile + intermediateRank;
                 if (!isEmptySquare(intermediateSquare)) {
@@ -209,7 +210,7 @@ var Game = (() => {
                 }
             }
         } else {
-            if (Math.abs(endRank - startRank) > 1) {
+            if ((moveDiff.rank > 1) || (moveDiff.file > 1)) {
                 console.log('cannot move more than 1 square');
                 return false;
             }
