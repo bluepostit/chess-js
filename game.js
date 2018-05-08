@@ -155,8 +155,6 @@ var Game = (() => {
     function getMoveDiff(start, end) {
         let startCoords = board.getCoordinatesForSquare(start);
         let endCoords = board.getCoordinatesForSquare(end);
-        let startFile = startCoords[1];
-        let endFile = endCoords[1];
 
         let rankDiff = Math.abs(startCoords[0] - endCoords[0]);
         let fileDiff = Math.abs(startCoords[1] - endCoords[1]);
@@ -232,7 +230,9 @@ var Game = (() => {
         let rankDiff = moveDiff.rank;
 
         // Must be the specific knight move
-        if (!((rankDiff == 2) && (fileDiff == 1)) && !((rankDiff == 1) && (fileDiff == 2))) {
+        let isKnightPattern = ((rankDiff == 2) && (fileDiff == 1))
+            || ((rankDiff == 1) && (fileDiff == 2));
+        if (!isKnightPattern) {
             return false;
         }
 
@@ -246,7 +246,7 @@ var Game = (() => {
 
     /**
       * This gets called after determining that
-      * it's your turn, and the piece belongs to you.
+      * it's your turn, and that the piece belongs to you.
       */
     function isLegalMove(start, end) {
         let startPiece = board.getPieceOnSquare(start);
