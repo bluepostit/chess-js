@@ -46,6 +46,24 @@ class Board {
         return [y, x];
     }
 
+    getSquareDiff(start, end, absolute) {
+        let startCoords = this.getCoordinatesForSquare(start);
+        let endCoords = this.getCoordinatesForSquare(end);
+
+        let rankDiff = endCoords[0] - startCoords[0];
+        let fileDiff = endCoords[1] - startCoords[1];
+
+        if (!!absolute) {
+            rankDiff = Math.abs(rankDiff);
+            fileDiff = Math.abs(fileDiff);
+        }
+
+        return {
+            file: fileDiff,
+            rank: rankDiff
+        };
+    }
+
     getPieceOnSquare(square) {
         let coords = this.getCoordinatesForSquare(square);
         let piece = null;
@@ -152,25 +170,12 @@ var Game = (() => {
         return isOwnCheck;
     }
 
-    function getMoveDiff(start, end) {
-        let startCoords = board.getCoordinatesForSquare(start);
-        let endCoords = board.getCoordinatesForSquare(end);
-
-        let rankDiff = Math.abs(startCoords[0] - endCoords[0]);
-        let fileDiff = Math.abs(startCoords[1] - endCoords[1]);
-
-        return {
-            file: fileDiff,
-            rank: rankDiff
-        };
-    }
-
     function isLegalPawnMove(start, end, player) {
         let startFile = start.substring(0, 1);
         let startRank = parseInt(start.substring(1, 2));
         let endFile = end.substring(0, 1);
         let endRank = parseInt(end.substring(1, 2));
-        let moveDiff = getMoveDiff(start, end);
+        let moveDiff = board.getSquareDiff(start, end, true);
 
         let isWhite = (player == 'w');
         let hasMovedYet = (isWhite ? startRank != 2 : startRank != 7);
@@ -225,7 +230,7 @@ var Game = (() => {
     }
 
     function isLegalKnightMove(start, end, player) {
-        let moveDiff = getMoveDiff(start, end);
+        let moveDiff = board.getSquareDiff(start, end, true);
         let fileDiff = moveDiff.file;
         let rankDiff = moveDiff.rank;
 
