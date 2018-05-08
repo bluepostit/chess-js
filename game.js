@@ -210,6 +210,30 @@ var Game = (() => {
         return true;
     }
 
+    function isLegalKnightMove(start, end, player) {
+        let startRank = parseInt(start.substring(1, 2));
+        let endRank = parseInt(end.substring(1, 2));
+        let startCoords = board.getCoordinatesForSquare(start);
+        let endCoords = board.getCoordinatesForSquare(end);
+        let startFile = startCoords[1];
+        let endFile = endCoords[1];
+
+        // Must be the specific Knight move
+        let rankDiff = Math.abs(startRank - endRank);
+        let fileDiff = Math.abs(startFile - endFile);
+        console.log('rank diff: ' + rankDiff + ', file diff: ' + fileDiff);
+        if (!((rankDiff == 2) && (fileDiff == 1)) || ((rankDiff == 1) && (fileDiff == 2))) {
+            return false;
+        }
+
+        let endPlayer = board.getPlayerForSquare(end);
+        if (player == endPlayer) {
+            console.log('cannot capture your own piece');
+            return false;
+        }
+        return true;
+    }
+
     /**
       * This gets called after determining that
       * it's your turn, and the piece belongs to you.
@@ -223,6 +247,10 @@ var Game = (() => {
             case 'wp':
             case 'bp':
                 isLegal = isLegalPawnMove(start, end, player);
+                break;
+            case 'wn':
+            case 'bn':
+                isLegal = isLegalKnightMove(start, end, player);
                 break;
         }
 
