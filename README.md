@@ -13,4 +13,5 @@ No plans currently to implement an AI opponent - to use it, you will need to pla
 * Add rules for more pieces.
 * Add rules for [*en passant*](https://en.wikipedia.org/wiki/En_passant), castling, stalemate, etc.
 * Package as a module for easy inclusion in other code
+
 * Other cool features
