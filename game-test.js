@@ -20,6 +20,7 @@ function testKnights() {
 
 function testBishops() {
 	console.log("Testing bishops");
+	// This is a comment in Javascript
 }
 
 testKnights();
