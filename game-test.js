@@ -17,4 +17,11 @@ function testKnights() {
         g.move(start, end);
     }
 }
+
+function testBishops() {
+	console.log("Testing bishops");
+}
+
 testKnights();
+testBishops();
+
